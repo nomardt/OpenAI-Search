@@ -8,7 +8,7 @@ openai.api_key = "ENTER YOUR API KEY HERE"
 try:
     prompt = sys.argv[1]
 except IndexError:
-    print('Usage: opai "Your Search Query"')    
+    print('Usage: ais "Your Search Query"')    
 
 response = openai.Completion.create(
     engine="text-davinci-003",
