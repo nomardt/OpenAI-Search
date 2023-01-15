@@ -14,7 +14,7 @@ response = openai.Completion.create(
     engine="text-davinci-003",
     prompt=prompt,
     max_tokens=1024,
-    temperature=0
+    temperature=0.2
 )
 
 print(response["choices"][0]["text"])
