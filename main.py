@@ -8,7 +8,7 @@ openai.api_key = "ENTER_YOUR_API"
 try:
     prompt = sys.argv[1]
 except IndexError:
-    print('Usage: ais "Your Search Query" [temperature](') 
+    print('Usage: ais "Your Search Query" [temperature]') 
     quit()   
 
 # Getting the amount of randomness
