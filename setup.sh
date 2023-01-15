@@ -19,7 +19,7 @@ fi
 printf "\nIf you want to add ais for other users/shell, add the following to *rc file:"
 printf "\nalias ais='/opt/openai-search/main.py'\n"
 printf "\nSometimes it might take a while for OpenAI's servers to process "
-printf "your query, so don't panic if you don't get a response immediately :)\n"
+printf "your query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
 
 rm -rf ../OpenAI-Search-main
 
