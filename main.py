@@ -10,7 +10,7 @@ try:
     
 except IndexError:
     print('Usage: ais "Your Search Query" [temperature]') 
-    quit()   
+    sys.exit()
 
 # Getting the amount of randomness
 try:
