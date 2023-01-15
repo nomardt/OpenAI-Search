@@ -21,6 +21,7 @@ def main():
 
     except IndexError:
         print('Usage: ais "Your Search Query" [OPTIONAL: temperature]')
+        quit()
 
     # Getting the amount of randomness
     try:
