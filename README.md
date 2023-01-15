@@ -6,3 +6,7 @@ Finally, thanks to OpenAI, we have an easy solution! Use your terminal to search
 ```
 sudo chmod +x setup.sh && sudo ./setup.sh
 ```
+# How to Use
+```
+ais 'YOUR QUERY'
+```
