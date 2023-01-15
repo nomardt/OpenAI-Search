@@ -7,6 +7,7 @@ openai.api_key = "ENTER_YOUR_API"
 # Getting the prompt
 try:
     prompt = sys.argv[1]
+    
 except IndexError:
     print('Usage: ais "Your Search Query" [temperature]') 
     quit()   
