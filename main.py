@@ -20,7 +20,7 @@ try:
         print("The amount of randomness can only be between the values 0 and 1!")
         raise TypeError
         
-except TypeError, IndexError:
+except (TypeError, IndexError):
     temp = 0.2
     
 response = openai.Completion.create(
