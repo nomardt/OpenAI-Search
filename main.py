@@ -4,7 +4,7 @@ import openai
 
 openai.api_key = "ENTER_YOUR_API"
 
-# Getting prompt
+# Getting the prompt
 try:
     prompt = sys.argv[1]
 except IndexError:
