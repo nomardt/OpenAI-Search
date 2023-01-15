@@ -16,10 +16,12 @@ if [ -f "/usr/bin/zsh" ]; then
  	echo 'alias ais="/opt/openai-search/main.py"' >> ~/.zshrc
 fi
 
-printf "\nIf you want to add ais for other users/shell, add the following to *rc file:"
+printf "\nPlease type: 'source ~/.bashrc' (or 'source ~/.zshrc') to finish the installation.\n"
+printf "\nIf you want to add ais for other users/shell, add the following to your *rc file:"
 printf "\nalias ais='/opt/openai-search/main.py'\n"
-printf "\nSometimes it might take a while for OpenAI's servers to process "
-printf "your query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
+printf "\nSometimes it might take a while for OpenAI's servers to process your "
+printf "query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
+printf "Usage: ais 'YOUR QUERY' [OPTIONAL: temperature]\n"
 
 rm -rf ../OpenAI-Search-main
 
