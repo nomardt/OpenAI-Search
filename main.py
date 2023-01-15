@@ -17,7 +17,7 @@ try:
     temp = int(sys.argv[2])
     
     if temp > 1 or temp < 0:
-        print("The amount of randomness can only be between the values 0 and 1!")
+        print("The amount of randomness can only be between values 0 and 1!")
         raise TypeError
         
 except (TypeError, IndexError, ValueError):
