@@ -20,7 +20,7 @@ def main():
         prompt = sys.argv[1]
 
     except IndexError:
-        raise IndexError('Usage: ais "Your Search Query" [temperature]')
+        print('Usage: ais "Your Search Query" [OPTIONAL: temperature]')
 
     # Getting the amount of randomness
     try:
