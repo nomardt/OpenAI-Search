@@ -14,7 +14,7 @@ except IndexError:
 # Getting the amount of randomness
 if len(sys.argv) != 3:
     temp = 0.2
-elif sys.argv[2] <= 1 and sys.argv[2] >= 0:
+elif int(sys.argv[2]) <= 1 and int(sys.argv[2]) >= 0:
     temp = sys.argv[2]
 else:
     print("The amount of randomness can only be between values 0 and 1!")
