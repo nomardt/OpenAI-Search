@@ -14,7 +14,7 @@ except IndexError:
 
 # Getting the amount of randomness
 try:
-    temp = int(sys.argv[2])
+    temp = float(sys.argv[2])
     
     if temp > 1 or temp < 0:
         print("The amount of randomness can only be between values 0 and 1!")
