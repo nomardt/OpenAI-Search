@@ -4,7 +4,7 @@ Finally, thanks to OpenAI, we have an easy solution! Use your terminal to search
 
 # Installation
 ```
-chmod +x setup.sh && ./setup.sh
+./setup.sh
 ```
 # How to Use
 ```
