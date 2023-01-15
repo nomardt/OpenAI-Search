@@ -12,12 +12,14 @@ except IndexError:
     quit()   
 
 # Getting the amount of randomness
-if len(sys.argv) != 3:
-    temp = 0.2
-elif int(sys.argv[2]) <= 1 and int(sys.argv[2]) >= 0:
-    temp = sys.argv[2]
-else:
-    print("The amount of randomness can only be between values 0 and 1!")
+try:
+    temp = int(sys.argv[2])
+    
+    if temp > 1 or temp < 0:
+        print("The amount of randomness can only be between the values 0 and 1!")
+        raise TypeError
+        
+except TypeError, IndexError:
     temp = 0.2
     
 response = openai.Completion.create(
