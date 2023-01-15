@@ -12,6 +12,6 @@ mv main.py /opt/openai-search
 
 printf "\nI don't know how to make a proper installer, so "
 printf "you'll have add the following to your .bashrc file:"
-echo   "alias ais=/opt/openai-search/main.py"
+printf "\nalias ais=/opt/openai-search/main.py\n"
 
 rm -r ../OpenAI-Search-main
