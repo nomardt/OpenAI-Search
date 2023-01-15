@@ -1,2 +1,3 @@
 # OpenAI-Search
-SAY NO TO BROWSERS THAT GOBBLE YOUR RAM LIKE IT'S CANDY!!!
+Are you tired of using these bulky browsers? Wouldn't we all be better off without any GUIs..?
+Finally, thanks to OpenAI, we have an easy solution! Use your terminal to search for whatever you want!
