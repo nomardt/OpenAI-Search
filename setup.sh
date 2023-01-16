@@ -5,7 +5,6 @@ pip install -r requirements.txt
 sudo cp ais.1.gz /usr/share/man/man1
 
 sudo mkdir /opt/openai-search 
-chmod +x main.py
 
 printf "\nPlease enter your OpenAI API key:\n"
 read api_key
@@ -13,6 +12,7 @@ sudo touch /opt/openai-search/.env
 sudo chmod 666 /opt/openai-search/.env
 echo $api_key > /opt/openai-search/.env
 
+chmod +x main.py
 sudo cp main.py /opt/openai-search
 
 echo 'alias ais="/opt/openai-search/main.py"' >> ~/.bashrc
