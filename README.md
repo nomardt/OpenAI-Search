@@ -7,7 +7,7 @@ Finally, thanks to OpenAI, we have an easy solution! Use your terminal to search
 chmod +x setup.sh && ./setup.sh
 ```
 # How to Use
-To view the manual type
+To view the manual entry type
 ```
 man ais
 ```
