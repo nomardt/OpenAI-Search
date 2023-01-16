@@ -6,10 +6,42 @@ import dotenv
 import openai
 
 
-def parse_args() -> argparse.Namespace:
+class AI:
+    def __init__(self, key: str):
+        if key:
+            dotenv.set_key('.env', 'API_KEY', key)
+
+        openai.api_key = dotenv.dotenv_values('.env')['API_KEY']
+
+    @staticmethod
+    def request_text(prompt: str, temp: float) -> str:
+        return openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=1024,
+            temperature=temp
+        )["choices"][0]["text"]
+
+    @staticmethod
+    def request_image(prompt: str, n: int) -> str:
+        res = "\n"
+        response = openai.Image.create(
+            prompt=prompt,
+            n=n,
+            size='1024x1024'
+        )['data']
+
+        for i, img in enumerate(response):
+            res += f"{i + 1}. {img['url']}\n"
+
+        return res
+
+
+def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="ais",
-        epilog='Pass no arguments to enter interactive mode (coming soon)'
+        prog="ais" if not interact_mode else None,
+        epilog='Pass no arguments to enter interactive mode. Print exit or quit to exit from interactive mode.',
+        exit_on_error=False,
     )
 
     parser.add_argument(
@@ -41,7 +73,7 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument(
         '-n',
-        nargs=1,
+        # nargs=1,
         type=int,
         required=False,
         default=1,
@@ -51,56 +83,87 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        nargs='+',
+        nargs='*',
         type=str,
         help="The prompt is your query.",
         metavar='prompt',
         dest='prompt',
     )
-
-    return parser.parse_args()
-
-
-def ai_request_text(prompt: str, temp: float) -> str:
-    return openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=1024,
-        temperature=temp
-    )["choices"][0]["text"]
+    return parser
 
 
-def ai_request_image(prompt: str, n: int) -> str:
-    return openai.Image.create(
-        prompt=prompt,
-        n=n,
-        size='1024x1024'
-    )["data"][0]["url"]
+def parse_args(parser, args):
+    try:
+        config = parser.parse_args(args)
+    except (argparse.ArgumentError, SystemExit) as err:
+        print("Command unrecognized:", err, "\nWrite -h to see usage or exit to exit")
 
 
-def main():
-    config = parse_args()
+def ai_request(config, ai: AI):
+    try:
+        if config.img_request:
+            print("[Query | Image]", config.prompt)
+            # TODO: add link shorter
+            print("[AI | URL]", ai.request_image(config.prompt, config.img_number))
 
-    if config.api_key:
-        dotenv.set_key('.env', 'API_KEY', config.api_key)
+        else:
+            if not (0. <= config.temp <= 1.):
+                config.temp = 0.2
+                print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
 
-    openai.api_key = dotenv.dotenv_values('.env')['API_KEY']
+            print("[Query]", config.prompt)
+            print("[AI]", ai.request_text(config.prompt, config.temp))
+    except openai.error.InvalidRequestError as err:
+        print("[x]", err)
+
+
+def main() -> None:
+    parser = set_flags()
+
+    try:
+        config = parser.parse_args()
+    except (argparse.ArgumentError, SystemExit) as err:
+        print(f"Command unrecognized: {err}\n{parser.print_help()}")
+        raise SystemExit
 
     config.prompt = ' '.join(config.prompt)
 
-    if config.img_request:
-        print("[Query | Image]", config.prompt)
-        # TODO: add link shorter
-        print("[AI | URL]", ai_request_image(config.prompt, config.img_number))
+    # Inline mode
+    if config.prompt:
+        ai_request(config, AI(config.api_key))
 
+    # Interactive mode
     else:
-        if not (0. <= config.temp <= 1.):
-            config.temp = 0.2
-            print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
+        print("You are in interactive mode.")
+        parser = set_flags(interact_mode=True)
 
-        print("[Query]", config.prompt)
-        print("[AI]", ai_request_text(config.prompt, config.temp))
+        while True:
+            # TODO: maybe this is not the best practice, but i'll refactor it later
+            args = input('# ').split()
+            if '-h' in args or '--help' in args:
+                parser.print_help()
+                continue
+
+            try:
+                config = parser.parse_args(args)
+            except (argparse.ArgumentError, SystemExit) as err:
+                print("Command unrecognized:", err, "\nWrite -h to see usage or exit to exit")
+                continue
+
+            config.prompt = ' '.join(config.prompt)
+
+            if config.prompt in ('exit', 'quit'):
+                raise SystemExit
+            elif not config.prompt and config.api_key:
+                AI(config.api_key)
+            elif not config.prompt:
+                print("[x] You should write any prompt.")
+            else:
+                ai_request(config, AI(config.api_key))
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, SystemExit):
+        sys.exit('Program exited')
