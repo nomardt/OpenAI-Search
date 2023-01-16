@@ -2,26 +2,26 @@
 
 pip install -r requirements.txt
 
-printf "\nPlease enter your OpenAI API key:\n"
-read api_key
-sed -i "s/ENTER_YOUR_API/${api_key}/" ./main.py
+sudo mkdir /opt/openai-search 
 chmod +x main.py
 
-sudo mkdir /opt/openai-search 
+printf "\nPlease enter your OpenAI API key:\n"
+read api_key
+sudo touch /opt/openai-search/.env
+sudo chmod 666 /opt/openai-search/.env
+echo $api_key > /opt/openai-search/.env
+
 sudo cp main.py /opt/openai-search
 
 echo 'alias ais="/opt/openai-search/main.py"' >> ~/.bashrc
-alias ais="/opt/openai-search/main.py"
 if [ -f "/usr/bin/zsh" ]; then
  	echo 'alias ais="/opt/openai-search/main.py"' >> ~/.zshrc
 fi
 
-printf "\nPlease type: 'source ~/.bashrc' (or 'source ~/.zshrc') to finish the installation.\n"
-printf "\nIf you want to add ais for other users/shell, add the following to your *rc file:"
-printf "\nalias ais='/opt/openai-search/main.py'\n"
-printf "\nSometimes it might take a while for OpenAI's servers to process your "
-printf "query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
-printf "Usage: ais 'YOUR QUERY' [OPTIONAL: temperature]\n"
+printf "\nInstallation finished successfully!\nThe program is installed to /opt/openai-search and we've added an alias to your bashrc (or zshrc)."
+printf "\nBefore using the program please relogin or type:\n'source ~/.bashrc' - for bash; 'source ~/.zshrc' - for zsh"
+/opt/openai-search/main.py
+printf "\nSometimes it might take a while for OpenAI's servers to process your query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
 
 rm -rf ../OpenAI-Search-main
 
