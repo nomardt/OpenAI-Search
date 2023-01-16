@@ -11,7 +11,7 @@ class AI:
         if key:
             dotenv.set_key('.env', 'API_KEY', key)
         try:
-            openai.api_key = dotenv.dotenv_values('.env')['API_KEY']
+            openai.api_key = dict(dotenv.dotenv_values())['API_KEY']
             if not openai.api_key:
                 raise KeyError
         except KeyError:
