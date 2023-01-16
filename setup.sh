@@ -22,7 +22,7 @@ fi
 
 printf "\nInstallation finished successfully!\nThe program is installed to /opt/openai-search and we've added an alias to your bashrc (or zshrc)."
 printf "\nBefore using the program please end the current session or type:\n'source ~/.bashrc' - for bash; 'source ~/.zshrc' - for zsh\n"
-printf "To view the manual, type: 'man ais'\nYou can also enter interactive search mode by typing 'ais'"
+printf "To view the manual, type: 'man ais'\n"
 printf "\nSometimes it might take a while for OpenAI's servers to process your query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
 
 rm -rf ../OpenAI-Search-main
