@@ -10,7 +10,7 @@ printf "\nPlease enter your OpenAI API key:\n"
 read api_key
 sudo touch /opt/openai-search/.env
 sudo chmod 666 /opt/openai-search/.env
-echo $api_key > /opt/openai-search/.env
+echo API_KEY=\'$api_key\' > /opt/openai-search/.env
 
 chmod +x main.py
 sudo cp main.py /opt/openai-search
