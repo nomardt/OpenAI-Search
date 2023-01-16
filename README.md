@@ -1,4 +1,4 @@
-# OpenAI-Search
+# OpenAI-Search [![Awesome](https://awesome.re/badge-flat2.svg)](https://awesome.re)
 Are you tired of using these bulky browsers? Wouldn't we all be better off without any GUIs..?
 Finally, thanks to OpenAI, we have an easy solution! Use your terminal to search for whatever you want!
 
