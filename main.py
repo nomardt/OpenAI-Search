@@ -7,7 +7,7 @@ import openai
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        prog="OpenAI Search",
+        prog="ais",
         epilog='Pass no arguments to enter interactive mode (coming soon)'
     )
 
