@@ -8,6 +8,9 @@ Finally, thanks to OpenAI, we have an easy solution! Use your terminal to search
 ```
 # How to Use
 ```
-ais 'YOUR QUERY' [OPTIONAL: temperature]
+ais [-h] [-t temperature] [-k OpenAI API key] -p prompt [prompt ...]
 ```
+
+TODO: Pass no arguments to enter interactive mode.
+
 Temperature - degree of randomness in results that can take values between 0 and 1. You can see a more detailed explanation [here](https://ai.stackexchange.com/questions/32477/what-is-the-temperature-in-the-gpt-models)
