@@ -48,7 +48,7 @@ class AI:
 def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ais" if not interact_mode else None,
-        epilog='Pass no arguments to enter interactive mode. Print exit or quit to exit from interactive mode.',
+        epilog='Pass no arguments to enter interactive mode. Print exit or quit to end the interactive session.',
         exit_on_error=False,
     )
 
@@ -58,7 +58,7 @@ def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
         default=0.2,
         type=float,
         required=False,
-        help="When -i flag is passed; The temperature determines how greedy the generative model is.",
+        help="When no flag is passed; The temperature determines how greedy the generative model is.",
         metavar='temperature',
         dest='temp',
     )
@@ -67,7 +67,7 @@ def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
         '-k', '--key',
         type=str,
         required=False,
-        help='Overwrite OpenAI API key in script environment variables.',
+        help='Overwrite OpenAI API key in .env.',
         metavar='OpenAI API key',
         dest='api_key'
     )
