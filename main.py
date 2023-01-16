@@ -61,7 +61,6 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-# TODO: create class
 def ai_request_text(prompt: str, temp: float) -> str:
     return openai.Completion.create(
         engine="text-davinci-003",
