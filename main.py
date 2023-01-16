@@ -116,12 +116,12 @@ def ai_request(config, ai: AI):
             print("[AI | URL]", ai.request_image(config.prompt, config.img_number))
 
         else:
-            if not (0. <= config.temp <= 1.):
-                config.temp = 0.2
+            if not (0. <= config.temp[0] <= 1.):
+                config.temp[0] = 0.2
                 print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
 
             print("[Query]", config.prompt)
-            print("[AI]", ai.request_text(config.prompt, config.temp))
+            print("[AI]", ai.request_text(config.prompt, config.temp[0]))
             
     except openai.error.InvalidRequestError as err:
         print("[x]", err)
