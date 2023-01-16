@@ -32,6 +32,24 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        '-i', '--generate_image',
+        type=str,
+        required=False,
+        help='Change the mode to image generation.',
+        metavar='generate_image',
+        dest='generate_image'
+    )
+
+    parser.add_argument(
+        '-n',
+        type=int,
+        required=False,
+        help='WORKS ONLY WITH -i; Specify the number of images to be generated',
+        metavar='n',
+        dest='n'
+    )
+
+    parser.add_argument(
         nargs='+',
         type=str,
         help="The prompt is your query.",
@@ -50,20 +68,31 @@ def ai_request(prompt: str, temp: float) -> str:
         temperature=temp
     )["choices"][0]["text"]
 
+def ai_request_image(prompt: str, n: int) -> str:
+    return openai.Completion.create(
+        prompt=prompt,
+        n=n,
+        size='1024x1024'
+    )["data"][0]["url"]
 
 def main():
     config = parse_args()
 
-    openai.api_key = "ENTER_YOUR_API" if config.api_key is None else config.api_key
+    if generate_image:
+        if not n:
+            n = 1
 
-    if not (0. <= config.temp <= 1.):
-        config.temp = 0.2
-        print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
+        print(ai_request_image(generate_image, n))
 
-    config.prompt = ' '.join(config.prompt)
+    else:
+        if not (0. <= config.temp <= 1.):
+            config.temp = 0.2
+            print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
 
-    print("[Query]", config.prompt)
-    print("[AI]", ai_request(config.prompt, config.temp))
+        config.prompt = ' '.join(config.prompt)
+
+        print("[Query]", config.prompt)
+        print("[AI]", ai_request(config.prompt, config.temp))
 
 
 if __name__ == '__main__':
