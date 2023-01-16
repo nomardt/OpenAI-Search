@@ -1,42 +1,71 @@
 #!/usr/bin/env python3
 import sys
+
+import argparse
 import openai
 
 
-def request(prompt, temp):
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="OpenAI Search",
+        epilog='Pass no arguments to enter interactive mode (coming soon)'
+    )
+
+    parser.add_argument(
+        '-t', '--temp', '--temperature',
+        nargs=1,
+        default=0.2,
+        type=float,
+        required=False,
+        help="The temperature determines how greedy the generative model is.",
+        metavar='temperature',
+        dest='temp',
+    )
+
+    parser.add_argument(
+        '-k', '--key',
+        type=str,
+        required=False,
+        help='Write or overwrite OpenAI API key in script environment variables.',
+        metavar='OpenAI API key',
+        dest='api_key'
+    )
+
+    parser.add_argument(
+        '-p', '--prompt',
+        nargs='+',
+        type=str,
+        required=True,
+        help="The prompt is your query.",
+        metavar='prompt',
+        dest='prompt',
+    )
+
+    return parser.parse_args()
+
+
+def ai_request(prompt: str, temp: float) -> str:
     return openai.Completion.create(
         engine="text-davinci-003",
         prompt=prompt,
         max_tokens=1024,
         temperature=temp
-    )
+    )["choices"][0]["text"]
 
 
 def main():
-    openai.api_key = "ENTER_YOUR_API"
+    config = parse_args()
 
-    # Getting the prompt
-    try:
-        prompt = sys.argv[1]
+    openai.api_key = "ENTER_YOUR_API" if config.api_key is None else config.api_key
 
-    except IndexError:
-        print('Usage: ais "Your Search Query" [OPTIONAL: temperature]')
-        quit()
+    if not (0 <= config.temp <= 1):
+        config.temp = 0.2
+        print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
 
-    # Getting the amount of randomness
-    try:
-        temp = float(sys.argv[2])
+    config.prompt = ' '.join(config.prompt)
 
-        if temp > 1 or temp < 0:
-            print("The amount of randomness can only be between values 0 and 1!")
-            raise TypeError
-
-    except (TypeError, IndexError, ValueError):
-        print("Please enter a value between 0 and 1 next time. Value 0.2 specified instead.")
-        temp = 0.2
-
-    response = request(prompt, temp)
-    print(response["choices"][0]["text"])
+    print("[Query]", config.prompt)
+    print("[AI]", ai_request(config.prompt, config.temp))
 
 
 if __name__ == '__main__':
