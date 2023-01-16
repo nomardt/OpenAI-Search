@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pip install openai
+pip install -r requirements.txt
 
 printf "\nPlease enter your OpenAI API key:\n"
 read api_key
