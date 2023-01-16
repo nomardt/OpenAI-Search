@@ -58,7 +58,7 @@ def main():
 
     openai.api_key = "ENTER_YOUR_API" if config.api_key is None else config.api_key
 
-    if not (0 <= config.temp <= 1):
+    if not (0. <= config.temp <= 1.):
         config.temp = 0.2
         print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
 
