@@ -56,7 +56,7 @@ def ai_request(prompt: str, temp: float) -> str:
 def main():
     config = parse_args()
 
-    openai.api_key = "ENTER_YOUR_API" if args.api_key is None else args.api_key
+    openai.api_key = "ENTER_YOUR_API" if config.api_key is None else config.api_key
 
     if not (0 <= config.temp <= 1):
         config.temp = 0.2
