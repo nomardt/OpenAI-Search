@@ -9,7 +9,7 @@ chmod +x setup.sh && ./setup.sh
 # How to Use
 To view the manual type
 ```
-ais -h
+man ais
 ```
 
 # FAQ
