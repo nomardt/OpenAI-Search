@@ -10,8 +10,14 @@ class AI:
     def __init__(self, key: str):
         if key:
             dotenv.set_key('.env', 'API_KEY', key)
+        try:
+            openai.api_key = dotenv.dotenv_values('.env')['API_KEY']
+            if not openai.api_key:
+                raise KeyError
+        except KeyError:
+            print("[x] Saved OpenAI API key not found. Pass it by the -k flag.")
+            raise SystemExit
 
-        openai.api_key = dotenv.dotenv_values('.env')['API_KEY']
 
     @staticmethod
     def request_text(prompt: str, temp: float) -> str:
@@ -50,7 +56,7 @@ def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
         default=0.2,
         type=float,
         required=False,
-        help="When -i flag is passed. The temperature determines how greedy the generative model is.",
+        help="When -i flag is passed; The temperature determines how greedy the generative model is.",
         metavar='temperature',
         dest='temp',
     )
