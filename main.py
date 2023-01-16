@@ -32,10 +32,8 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        '-p', '--prompt',
         nargs='+',
         type=str,
-        required=True,
         help="The prompt is your query.",
         metavar='prompt',
         dest='prompt',
