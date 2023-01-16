@@ -55,7 +55,7 @@ def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
     parser.add_argument(
         '-t', '--temp', '--temperature',
         nargs=1,
-        default=0.2,
+        default=[0.2,],
         type=float,
         required=False,
         help="When no flag is passed; The temperature determines how greedy the generative model is.",
@@ -116,10 +116,6 @@ def ai_request(config, ai: AI):
             print("[AI | URL]", ai.request_image(config.prompt, config.img_number))
 
         else:
-            # WARNING! Some senior-level code ahead!
-            if 'float' in str(type(config.temp)):
-                config.temp = [config.temp, 13.37]
-            
             if not (0. <= config.temp[0] <= 1.):
                 config.temp[0] = 0.2
                 print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
