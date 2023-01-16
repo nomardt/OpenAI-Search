@@ -2,7 +2,7 @@
 import sys
 
 import argparse
-from dotenv import dotenv_values
+import dotenv
 import openai
 
 
@@ -27,7 +27,7 @@ def parse_args() -> argparse.Namespace:
         '-k', '--key',
         type=str,
         required=False,
-        help='Write or overwrite OpenAI API key in script environment variables.',
+        help='Overwrite OpenAI API key in script environment variables.',
         metavar='OpenAI API key',
         dest='api_key'
     )
@@ -81,9 +81,11 @@ def ai_request_image(prompt: str, n: int) -> str:
 
 def main():
     config = parse_args()
-    # TODO: add writing api_key to .env
 
-    openai.api_key = dotenv_values('.env')['API_KEY']
+    if config.api_key:
+        dotenv.set_key('.env', 'API_KEY', config.api_key)
+
+    openai.api_key = dotenv.dotenv_values('.env')['API_KEY']
 
     config.prompt = ' '.join(config.prompt)
 
