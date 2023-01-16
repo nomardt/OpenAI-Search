@@ -10,10 +10,12 @@ class AI:
     def __init__(self, key: str):
         if key:
             dotenv.set_key('.env', 'API_KEY', key)
+            
         try:
             openai.api_key = dict(dotenv.dotenv_values())['API_KEY']
             if not openai.api_key:
                 raise KeyError
+                
         except KeyError:
             print("[x] Saved OpenAI API key not found. Pass it by the -k flag.")
             raise SystemExit
@@ -101,6 +103,7 @@ def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
 def parse_args(parser, args):
     try:
         config = parser.parse_args(args)
+        
     except (argparse.ArgumentError, SystemExit) as err:
         print("Command unrecognized:", err, "\nWrite -h to see usage or exit to exit")
 
@@ -119,6 +122,7 @@ def ai_request(config, ai: AI):
 
             print("[Query]", config.prompt)
             print("[AI]", ai.request_text(config.prompt, config.temp))
+            
     except openai.error.InvalidRequestError as err:
         print("[x]", err)
 
@@ -128,8 +132,9 @@ def main() -> None:
 
     try:
         config = parser.parse_args()
-    except (argparse.ArgumentError, SystemExit) as err:
-        print(f"Command unrecognized: {err}\n{parser.print_help()}")
+        
+    except (argparse.ArgumentError, SystemExit) as error:
+        print(f"Command unrecognized: {error}\n{parser.print_help()}")
         raise SystemExit
 
     config.prompt = ' '.join(config.prompt)
@@ -152,6 +157,7 @@ def main() -> None:
 
             try:
                 config = parser.parse_args(args)
+                
             except (argparse.ArgumentError, SystemExit) as err:
                 print("Command unrecognized:", err, "\nWrite -h to see usage or exit to exit")
                 continue
@@ -160,10 +166,13 @@ def main() -> None:
 
             if config.prompt in ('exit', 'quit'):
                 raise SystemExit
+                
             elif not config.prompt and config.api_key:
                 AI(config.api_key)
+                
             elif not config.prompt:
                 print("[x] You should write any prompt.")
+                
             else:
                 ai_request(config, AI(config.api_key))
 
@@ -171,5 +180,6 @@ def main() -> None:
 if __name__ == '__main__':
     try:
         main()
+        
     except (KeyboardInterrupt, SystemExit):
         sys.exit('Program exited')
