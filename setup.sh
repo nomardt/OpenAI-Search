@@ -2,7 +2,8 @@
 
 pip install -r requirements.txt
 
-sudo cp ais.1.gz /usr/share/man/man1
+gzip docs/ais.1
+sudo cp docs/ais.1.gz /usr/share/man/man1
 
 sudo mkdir /opt/openai-search 
 

@@ -1,0 +1,39 @@
+.\" Manpage for OpenAI-Search.
+.\" Contact nomardt@aol.com to correct errors or typos.
+.TH man 1 "16 January 2023" "1.0" "ais man page"
+.SH NAME
+ais \- interact with OpenAI API conveniently 
+.SH SYNOPSIS
+ais [Action Type] [Options]... {Your Query}
+.SH DESCRIPTION
+OpenAI-Search is a simple open source tool to interact with the OpenAI API. By default you interact with the completions endpoint which provides a simple but powerful interface to any of OpenAI's models. In plain English it means that you can enter a query and an AI will answer your question/create the text you've requested.
+
+You can also enter the interactive mode by typing 'ais' in the terminal without any arguments. To exit use the ctrl + c keyboard shortcut or type quit (exit).
+
+The tool can be used to generate images with OpenAI's DALL*E models (-i). The size of generated images is set to 1024x1024, you can specify the number of images to be generated.
+.SH OPTIONS
+-default Action Type (no flag):
+    -t, --temp, --temperature
+        Set the degree of randomness in output ('creativity')
+                  (can only be between 0 and 1)
+
+-Generate Image (add flag -i or --generate-image):
+    -n
+        Specify the number of images to be generated 
+                  (not more than 10)
+
+-Set New API Key (add flag -k or --key):
+    no options available
+
+-Help (add flag -h or --help):
+    no options available
+.SH SEE ALSO
+https://beta.openai.com/docs/guides/
+.SH BUGS
+No known bugs.
+.SH AUTHORS
+Yaroslav Makarov  Maxim Sergeev
+
+nomardt@aol.com   maxsergeev39@gmail.com
+.SH SPECIAL THANKS TO
+Ivan Rybin
