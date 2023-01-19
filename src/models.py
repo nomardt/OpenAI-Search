@@ -3,6 +3,7 @@ from typing import Sequence
 
 import openai
 import dotenv
+from loguru import logger as log
 
 
 class AI:
@@ -16,7 +17,7 @@ class AI:
 
         if self.config.api_key:
             dotenv.set_key('.env', 'API_KEY', self.config.api_key)
-            print("API key saved.")
+            log.info("API key saved.")
 
         try:
             openai.api_key = dict(dotenv.dotenv_values())['API_KEY']
@@ -24,7 +25,7 @@ class AI:
                 raise KeyError
 
         except KeyError:
-            print("[x] Saved OpenAI API key not found. Pass it by the -k flag.")
+            log.critical("[x] Saved OpenAI API key not found. Pass it by the -k flag.")
             raise SystemExit
 
     def _request_text(self) -> None:
@@ -35,8 +36,7 @@ class AI:
             temperature=self.config.temp
         )["choices"][0]["text"]
 
-        print("[Query]", self.config.prompt)
-        print("[AI]", response)
+        print(">", self.config.prompt, "\n[AI]", response)
 
     def _request_image(self) -> None:
         res = "\n"
@@ -49,8 +49,7 @@ class AI:
         for i, img in enumerate(response):
             res += f"{i + 1}. {img['url']}\n"
 
-        print("[Query | Image]", self.config.prompt)
-        print("[AI | URL]", res)
+        log.info(f"img > {self.config.prompt}\n{res}")
 
     def request(self) -> None:
         try:
@@ -60,15 +59,25 @@ class AI:
                 self._request_text()
 
         except openai.error.InvalidRequestError as err:
-            print("[x]", err)
+            log.error("[x]", err)
 
 
 class ArgsNamespace:
-    def __new__(cls, source: Sequence[str] | str | None = None, interactive_mode: bool = False) -> argparse.Namespace:
+    def __new__(cls,
+                source: Sequence[str] | str | None = None,
+                interactive_mode: bool = False) -> argparse.Namespace:
+        """
+        Return namespace of arguments.
+        :param source: A string with arguments or a sequence of arguments.
+        If None, the value will be determined from `sys.argv`.
+        :param interactive_mode:
+        :return: Namespace of arguments or `False` if help message requested.
+        """
+
         cls = argparse.ArgumentParser(
-            prog="ais" if not interactive_mode else None,
+            prog="ais" if not interactive_mode else '',
             epilog='Pass no arguments to enter interactive mode. Print exit or quit to end the interactive session.',
-            exit_on_error=False,
+            exit_on_error=True,
         )
 
         cls.add_argument(
@@ -120,14 +129,15 @@ class ArgsNamespace:
             source = source.split()
 
         try:
+            log.debug(f'Parsing arguments from {source}')
             namespace = cls.parse_args(source)
 
-        except (argparse.ArgumentError, SystemExit) as err:
-            print(f"Command unrecognized: {err}\n"
-                  f"{cls.print_usage()}\n"
-                  f"Try '{'' if interactive_mode else 'ais '}-h' for more information.")
-
-            raise SystemExit
+        except SystemExit as err:
+            log.error(
+                f"Command unrecognized. Status code: {err}\n"
+                f"{cls.format_usage()}"
+                f"Try '{'' if interactive_mode else 'ais '}-h' for more information."
+            )
 
         else:
             namespace.prompt = ' '.join(namespace.prompt).lstrip()
@@ -135,6 +145,8 @@ class ArgsNamespace:
 
             if not (0. <= namespace.temp <= 1.):
                 namespace.temp = 0.2
-                print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
+                log.warning(
+                    "The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead."
+                )
 
             return namespace
