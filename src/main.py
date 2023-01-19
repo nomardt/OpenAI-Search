@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-import argparse
 import sys
 
-import openai
 from loguru import logger as log
 
 from models import ArgsNamespace, AI
