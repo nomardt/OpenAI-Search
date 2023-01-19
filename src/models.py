@@ -1,0 +1,140 @@
+import argparse
+from typing import Sequence
+
+import openai
+import dotenv
+
+
+class AI:
+    """
+    This class initializes the API key when an instance is created.
+    Using class methods, you can send appropriate requests to OpanAI
+    """
+
+    def __init__(self, config: argparse.Namespace):
+        self.config = config
+
+        if self.config.api_key:
+            dotenv.set_key('.env', 'API_KEY', self.config.api_key)
+            print("API key saved.")
+
+        try:
+            openai.api_key = dict(dotenv.dotenv_values())['API_KEY']
+            if not openai.api_key:
+                raise KeyError
+
+        except KeyError:
+            print("[x] Saved OpenAI API key not found. Pass it by the -k flag.")
+            raise SystemExit
+
+    def _request_text(self) -> None:
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=self.config.prompt,
+            max_tokens=1024,
+            temperature=self.config.temp
+        )["choices"][0]["text"]
+
+        print("[Query]", self.config.prompt)
+        print("[AI]", response)
+
+    def _request_image(self) -> None:
+        res = "\n"
+        response = openai.Image.create(
+            prompt=self.config.prompt,
+            n=self.config.img_number,
+            size='1024x1024'
+        )['data']
+
+        for i, img in enumerate(response):
+            res += f"{i + 1}. {img['url']}\n"
+
+        print("[Query | Image]", self.config.prompt)
+        print("[AI | URL]", res)
+
+    def request(self) -> None:
+        try:
+            if self.config.img_request:
+                self._request_image()
+            else:
+                self._request_text()
+
+        except openai.error.InvalidRequestError as err:
+            print("[x]", err)
+
+
+class ArgsNamespace:
+    def __new__(cls, source: Sequence[str] | str | None = None, interactive_mode: bool = False) -> argparse.Namespace:
+        cls = argparse.ArgumentParser(
+            prog="ais" if not interactive_mode else None,
+            epilog='Pass no arguments to enter interactive mode. Print exit or quit to end the interactive session.',
+            exit_on_error=False,
+        )
+
+        cls.add_argument(
+            '-t', '--temp', '--temperature',
+            nargs=1,
+            default=[0.2, ],
+            type=float,
+            required=False,
+            help="When no flag is passed; The temperature determines how greedy the generative model is.",
+            metavar='temperature',
+            dest='temp',
+        )
+
+        cls.add_argument(
+            '-k', '--key',
+            type=str,
+            required=False,
+            help='Overwrite OpenAI API key in .env.',
+            metavar='OpenAI API key',
+            dest='api_key'
+        )
+
+        cls.add_argument(
+            '-i', '--generate_image',
+            action='store_true',
+            help='Generate image by prompt.',
+            dest='img_request'
+        )
+
+        cls.add_argument(
+            '-n',
+            type=int,
+            required=False,
+            default=1,
+            help='When -i flag is passed; Specify the number of images to be generated (from 1 to 10, default 1)',
+            metavar='images number',
+            dest='img_number'
+        )
+
+        cls.add_argument(
+            nargs='*',
+            type=str,
+            help="The prompt is your query.",
+            metavar='prompt',
+            dest='prompt',
+        )
+
+        if isinstance(source, str):
+            source = source.split()
+
+        try:
+            namespace = cls.parse_args(source)
+
+        except (argparse.ArgumentError, SystemExit) as err:
+            print(f"Command unrecognized: {err}\n"
+                  f"{cls.print_usage()}\n"
+                  f"Try '{'' if interactive_mode else 'ais '}-h' for more information.")
+
+            raise SystemExit
+
+        else:
+            namespace.prompt = ' '.join(namespace.prompt).lstrip()
+            namespace.temp = namespace.temp[0]
+
+            if not (0. <= namespace.temp <= 1.):
+                namespace.temp = 0.2
+                print("The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead.")
+
+            return namespace
