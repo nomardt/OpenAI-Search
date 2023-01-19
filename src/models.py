@@ -75,7 +75,7 @@ class ArgsNamespace:
         """
 
         cls = argparse.ArgumentParser(
-            prog="ais" if not interactive_mode else '',
+            prog='ais' if not interactive_mode else '',
             epilog='Pass no arguments to enter interactive mode. Print exit or quit to end the interactive session.',
             exit_on_error=True,
         )
@@ -86,7 +86,7 @@ class ArgsNamespace:
             default=[0.2, ],
             type=float,
             required=False,
-            help="When no flag is passed; The temperature determines how greedy the generative model is.",
+            help='When no flag is passed; The temperature determines how greedy the generative model is.',
             metavar='temperature',
             dest='temp',
         )
@@ -120,9 +120,16 @@ class ArgsNamespace:
         cls.add_argument(
             nargs='*',
             type=str,
-            help="The prompt is your query.",
+            help='The prompt is your query.',
             metavar='prompt',
             dest='prompt',
+        )
+
+        cls.add_argument(
+            '-d', '--debug',
+            action='store_true',
+            help='Enable debugging mode.',
+            dest='debug'
         )
 
         if isinstance(source, str):
