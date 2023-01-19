@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
+import argparse
 import sys
 
-import argparse
 import dotenv
 import openai
 
 
+Link = str
+
+
 class AI:
+    """
+    This class initializes the API key when an instance is created.
+    Using class methods, you can send appropriate requests to OpanAI
+    """
     def __init__(self, key: str):
         if key:
             dotenv.set_key('.env', 'API_KEY', key)
@@ -20,9 +27,8 @@ class AI:
             print("[x] Saved OpenAI API key not found. Pass it by the -k flag.")
             raise SystemExit
 
-
     @staticmethod
-    def request_text(prompt: str, temp: float) -> str:
+    def request_text(prompt: str, temp: float) -> Link:
         return openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt,
@@ -81,7 +87,6 @@ def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
 
     parser.add_argument(
         '-n',
-        # nargs=1,
         type=int,
         required=False,
         default=1,
@@ -97,6 +102,7 @@ def set_flags(interact_mode: bool = False) -> argparse.ArgumentParser:
         metavar='prompt',
         dest='prompt',
     )
+
     return parser
 
 
@@ -108,7 +114,7 @@ def parse_args(parser, args):
         print("Command unrecognized:", err, "\nWrite -h to see usage or exit to exit")
 
 
-def ai_request(config, ai: AI):
+def ai_request(config, ai: AI) -> None:
     try:
         if config.img_request:
             print("[Query | Image]", config.prompt)
