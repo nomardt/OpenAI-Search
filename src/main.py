@@ -53,7 +53,7 @@ if __name__ == '__main__':
         main()
         
     except (KeyboardInterrupt, SystemExit) as err:
-        log.error(err)
+        log.error(f"Exited with code: {err}")
 
     except Exception as err:
         log.opt(exception=True).error(err)
