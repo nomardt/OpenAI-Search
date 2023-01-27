@@ -4,6 +4,7 @@ from argparse import Namespace
 
 from loguru import logger as log
 
+from logger import configure_logging
 from models import ArgsNamespace, AI
 
 
@@ -40,20 +41,13 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    log.remove()
-    log.add(
-        sys.stdout,
-        level='DEBUG',
-        colorize=True,
-        diagnose=True, # TODO
-        enqueue=True,
-    )
+    configure_logging('-d' in sys.argv or '--debug' in sys.argv)
 
     try:
         main()
         
-    except (KeyboardInterrupt, SystemExit) as err:
-        log.error(f"Exited with code: {err}")
+    except (KeyboardInterrupt, SystemExit):
+        log.error("Process finished.")
 
     except Exception as err:
         log.opt(exception=True).error(err)

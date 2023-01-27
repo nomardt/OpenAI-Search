@@ -36,7 +36,7 @@ class AI:
             temperature=self.config.temp
         )["choices"][0]["text"]
 
-        print(">", self.config.prompt, "\n[AI]", response)
+        log.info(">", self.config.prompt, "\n[AI]", response)
 
     def _request_image(self) -> None:
         res = "\n"
