@@ -3,7 +3,7 @@
 FILE_EXISTS=/opt/openai-search/main.py
 if [ -f "$FILE_EXISTS" ]; then
     echo "The program is already installed!"
-    exit N
+    exit 0
 fi
 
 pip install -r requirements.txt
