@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FILE_EXISTS=/opt/openai-search/main.py
-if [ -f "$FILE" ]; then
+if [ -f "$FILE_EXISTS" ]; then
     echo "The program is already installed!"
     exit N
 fi
@@ -28,5 +28,3 @@ sudo chmod +x /usr/bin/ais
 printf "\nInstallation finished successfully!\nThe program is installed to /opt/openai-search."
 printf "\nTo view the manual, type: 'man ais'\n"
 printf "\nSometimes it might take a while for OpenAI's servers to process your query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
-
-rm -rf ../OpenAI-Search-main
