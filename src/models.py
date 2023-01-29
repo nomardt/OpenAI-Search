@@ -103,7 +103,7 @@ class ArgsNamespace:
 
         cls.add_argument(
             '-i', '--generate_image',
-            action='store_const',
+            action='store_true',
             help='Generate image by prompt.',
             dest='img_request'
         )
