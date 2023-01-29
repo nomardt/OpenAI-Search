@@ -34,9 +34,9 @@ class AI:
             prompt=self.config.prompt,
             max_tokens=1024,
             temperature=self.config.temp
-        )["choices"][0]["text"]
+        )["choices"][0]["text"].strip()
 
-        log.info(">", self.config.prompt, "\n[AI]", response)
+        log.response(response)
 
     def _request_image(self) -> None:
         res = "\n"
@@ -49,7 +49,7 @@ class AI:
         for i, img in enumerate(response):
             res += f"{i + 1}. {img['url']}\n"
 
-        log.info(f"img > {self.config.prompt}\n{res}")
+        log.response(res)
 
     def request(self) -> None:
         try:

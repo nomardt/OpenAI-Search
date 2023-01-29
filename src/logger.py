@@ -1,4 +1,6 @@
 import sys
+from datetime import datetime
+from functools import partialmethod
 
 from loguru import logger as log
 
@@ -21,16 +23,36 @@ def configure_logging(debug: bool = False):
     """
     log.remove()
 
+    log.level('PROMPT', no=25, color='<bold>', icon='>')
+    log.__class__.prompt = partialmethod(log.__class__.log, 'PROMPT')
+
+    log.level('RESPONSE', no=25)
+    log.__class__.response = partialmethod(log.__class__.log, 'RESPONSE')
+
     log.add(
-        sink=sys.stdout,
-        level='INFO',
-        format='<green>{time:HH:mm:ss}</green> {message}',
+        sink=f'logs/history/ais_history_{datetime.now().isoformat(timespec="seconds").replace(":", "-")}.log',
+        format='> <bold>{message}</bold>',
+        filter=lambda record: record['level'].name == 'PROMPT',
         colorize=True,
         serialize=False,
         backtrace=False,
         diagnose=False,
         enqueue=True,
-        catch=True,
+        catch=False,
+        delay=True,
+    )
+
+    log.add(
+        sink=f'logs/history/ais_history_{datetime.now().isoformat(timespec="seconds").replace(":", "-")}.log',
+        format='{message}',
+        filter=lambda record: record['level'].name == 'RESPONSE',
+        colorize=True,
+        serialize=False,
+        backtrace=False,
+        diagnose=False,
+        enqueue=True,
+        catch=False,
+        delay=True,
     )
 
     if debug:
@@ -56,8 +78,37 @@ def configure_logging(debug: bool = False):
             serialize=False,
             backtrace=True,
             diagnose=True,
-            enqueue=True,
+            enqueue=False,
+            catch=True,
+        )
+    else:
+        log.add(
+            sink=sys.stdout,
+            level='INFO',
+            format='<green>[{time:HH:mm:ss}]</green> {message}',
+            filter=lambda record: record['level'].name not in ('PROMPT', 'RESPONSE'),
+            colorize=True,
+            serialize=False,
+            backtrace=False,
+            diagnose=False,
+            enqueue=False,
             catch=True,
         )
 
+        log.add(
+            sink=sys.stdout,
+            format="<italic>{message}</italic>",
+            filter=lambda record: record['level'].name == 'RESPONSE',
+            colorize=True,
+            serialize=False,
+            backtrace=False,
+            diagnose=False,
+            enqueue=False,
+            catch=False,
+        )
+
     log.debug("Logging set up in debug mode.")
+
+
+if __name__ == '__main__':
+    configure_logging()

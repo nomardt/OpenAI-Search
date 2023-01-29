@@ -14,14 +14,18 @@ def main() -> None:
 
     # Inline mode
     if config.prompt:
+        log.prompt(config.prompt)
         AI(config).request()
 
     # Interactive mode
     else:
-        log.debug("Interactive mode enabled.")
+        log.info("Interactive mode enabled.")
 
         while True:
-            config = ArgsNamespace(source=input('# '), interactive_mode=True)
+            user_input = input('Enter your prompt:\n> ')
+            log.prompt(user_input)
+
+            config = ArgsNamespace(source=user_input, interactive_mode=True)
             log.debug(f"Got {config = } for interactive mode")
 
             if config is None:
