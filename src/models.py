@@ -1,9 +1,11 @@
 import argparse
+import sys
 from typing import Sequence
 
 import openai
 import dotenv
 from loguru import logger as log
+from pynput import keyboard
 
 
 class AI:
@@ -158,3 +160,82 @@ class ArgsNamespace:
                 )
 
             return namespace
+
+
+class _CustomCounter:
+    """
+    The class allows you to cyclically and randomly increment and decrement the list index.
+    Spinning up is decrementing value and spinning down is incrementing.
+    :param vol: Volume of counter.
+    """
+    def __init__(self, vol: int):
+        if vol < 0:
+            raise ValueError("Volume must be a natural number")
+
+        self.vol = vol
+        self.val = -1
+
+    def __int__(self):
+        return self.val
+
+    def _spin_up(self):
+        if self.val < 0 and abs(self.val) >= self.vol:
+            self.val = 0
+        else:
+            self.val -= 1
+
+    def _spin_down(self):
+        self.val += 1
+        if self.val >= self.vol:
+            self.val *= -1
+
+    def spin(self, key):
+        if key == keyboard.Key.up:
+            self._spin_up()
+
+        elif key == keyboard.Key.down:
+            self._spin_down()
+
+
+class InputListener:
+    """
+    The class extends the capabilities of the input function.
+    The listen method listens for the keys pressed by the user and returns the result.
+    """
+    def __init__(self, previous_inputs: list[str] | None = None):
+        self._previous_inputs = previous_inputs
+        if self._previous_inputs is not None:
+            self._previous_inputs.append('')
+            self._result: str = ''
+            self._i = _CustomCounter(len(self._previous_inputs))
+
+    def listen(self) -> str:
+        if self._previous_inputs is None:
+            return input("> ")
+
+        def _on_press(key) -> None:
+            if key in (keyboard.Key.up, keyboard.Key.down):
+                self._i.spin(key)
+                self._result = self._previous_inputs[int(self._i)]
+                sys.stdout.write(f'\r> {self._result}')
+                sys.stdout.flush()
+
+            elif key == keyboard.Key.enter:
+                listener.stop()
+
+            # If backspace was pressed: delete last symbol, clear output and print result
+            elif key == keyboard.Key.backspace and self._result:
+                self._result = self._result[:-1]
+                sys.stdout.write(f'\r> {self._result}')
+                sys.stdout.flush()
+
+            # If a symbol key was pressed: add it to result
+            elif not isinstance(key, keyboard.Key):
+                self._result += str(key).strip("'")
+
+        print("> ", end='', flush=True)
+
+        with keyboard.Listener(on_press=_on_press) as listener:
+            listener.join()
+
+        return self._result
