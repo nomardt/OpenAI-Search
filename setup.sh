@@ -1,5 +1,11 @@
 #!/bin/bash
 
+FILE_EXISTS=/opt/openai-search/main.py
+if [ -f "$FILE_EXISTS" ]; then
+    echo "The program is already installed!"
+    exit 0
+fi
+
 pip install -r requirements.txt
 
 gzip docs/ais.1
@@ -16,14 +22,9 @@ echo API_KEY=\'$api_key\' > /opt/openai-search/.env
 chmod +x main.py
 sudo cp src/main.py /opt/openai-search
 
-echo 'alias ais="/opt/openai-search/main.py"' >> ~/.bashrc
-if [ -f "/usr/bin/zsh" ]; then
- 	echo 'alias ais="/opt/openai-search/main.py"' >> ~/.zshrc
-fi
+sudo ln -s /opt/openai-search/main.py /usr/bin/ais
+sudo chmod +x /usr/bin/ais
 
-printf "\nInstallation finished successfully!\nThe program is installed to /opt/openai-search and we've added an alias to your bashrc (or zshrc)."
-printf "\nBefore using the program please end the current session or type:\n'source ~/.bashrc' - for bash; 'source ~/.zshrc' - for zsh\n"
-printf "To view the manual, type: 'man ais'\n"
+printf "\nInstallation finished successfully!\nThe program is installed to /opt/openai-search."
+printf "\nTo view the manual, type: 'man ais'\n"
 printf "\nSometimes it might take a while for OpenAI's servers to process your query, so don't panic if you don't get a response immediately :)\nEnjoy!\n"
-
-rm -rf ../OpenAI-Search-main
