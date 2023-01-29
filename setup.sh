@@ -19,9 +19,6 @@ fi
 
 pip install -r requirements.txt
 
-gzip docs/ais.1
-sudo cp docs/ais.1.gz /usr/share/man/man1
-
 sudo mkdir /opt/openai-search 
 
 printf "\nPlease enter your OpenAI API key:\n"
@@ -35,6 +32,9 @@ sudo cp src/main.py /opt/openai-search
 
 sudo ln -s /opt/openai-search/main.py /usr/bin/ais
 sudo chmod +x /usr/bin/ais
+
+gzip docs/ais.1
+sudo cp docs/ais.1.gz /usr/share/man/man1
 
 printf "\nInstallation finished successfully!\nThe program is installed to /opt/openai-search."
 printf "\nTo view the manual, type: 'man ais'\n"
