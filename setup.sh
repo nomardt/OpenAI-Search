@@ -1,9 +1,19 @@
 #!/bin/bash
 
-FILE_EXISTS=/opt/openai-search/main.py
-if [ -f "$FILE_EXISTS" ]; then
-    echo "The program is already installed!"
-    exit 0
+if [ -e /opt/openai-search/main.py ]; then
+    echo "OpenAI-Search is already installed!"
+    printf "Do you want to remove the previous version? "
+    read response
+    if [[ $response == [Yy]es || $response == [Yy] ]]
+    then
+        printf "\nUninstalling the previous version...\n"
+        sudo rm -rf /opt/openai-search
+        sudo rm /usr/bin/ais
+        sudo rm /usr/share/man/man1/ais.1.gz
+        printf "The previous version uninstalled successfully!\nThe installation process will now continue as usual..."
+    else
+        printf "\nInstallation interrupted!\n"
+        exit 0
 fi
 
 pip install -r requirements.txt
