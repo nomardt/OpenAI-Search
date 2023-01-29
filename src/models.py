@@ -145,6 +145,7 @@ class ArgsNamespace:
                 f"{cls.format_usage()}"
                 f"Try '{'' if interactive_mode else 'ais '}-h' for more information."
             )
+            return argparse.Namespace()
 
         else:
             namespace.prompt = ' '.join(namespace.prompt).lstrip()
