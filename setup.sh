@@ -19,10 +19,9 @@ fi
 
 pip install -r requirements.txt
 
-sudo mkdir /opt/openai-search 
-
 printf "\nPlease enter your OpenAI API key:\n"
 read api_key
+sudo mkdir /opt/openai-search
 sudo touch /opt/openai-search/.env
 sudo chmod 666 /opt/openai-search/.env
 echo API_KEY=\'$api_key\' > /opt/openai-search/.env
