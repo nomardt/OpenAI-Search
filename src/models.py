@@ -79,7 +79,6 @@ class ArgsNamespace:
         cls = argparse.ArgumentParser(
             prog='ais' if not interactive_mode else '',
             epilog='Pass no arguments to enter interactive mode. Print exit or quit to end the interactive session.',
-            exit_on_error=True,
         )
 
         cls.add_argument(
@@ -104,7 +103,7 @@ class ArgsNamespace:
 
         cls.add_argument(
             '-i', '--generate_image',
-            action='store_true',
+            action='store_const',
             help='Generate image by prompt.',
             dest='img_request'
         )
@@ -137,19 +136,10 @@ class ArgsNamespace:
         if isinstance(source, str):
             source = source.split()
 
-        try:
-            log.debug(f'Parsing arguments from {source}')
-            namespace = cls.parse_args(source)
+        log.debug(f'Parsing arguments from {source}')
+        namespace = cls.parse_args(source)
 
-        except SystemExit as err:
-            log.error(
-                f"Command unrecognized. Status code: {err}\n"
-                f"{cls.format_usage()}"
-                f"Try '{'' if interactive_mode else 'ais '}-h' for more information."
-            )
-            return argparse.Namespace()
-
-        else:
+        if namespace is not None:
             namespace.prompt = ' '.join(namespace.prompt).lstrip()
             namespace.temp = namespace.temp[0]
 
@@ -159,7 +149,7 @@ class ArgsNamespace:
                     "The temperature only accepts floating point numbers from 0 to 1. Value 0.2 specified instead."
                 )
 
-            return namespace
+        return namespace
 
 
 class _CustomCounter:
