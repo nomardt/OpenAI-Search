@@ -27,7 +27,7 @@ sudo chmod 666 /opt/openai-search/.env
 echo API_KEY=\'$api_key\' > /opt/openai-search/.env
 
 chmod +x src/main.py
-sudo cp src/main.py /opt/openai-search
+sudo cp -R src/. /opt/openai-search
 
 sudo ln -s /opt/openai-search/main.py /usr/bin/ais
 sudo chmod +x /usr/bin/ais
