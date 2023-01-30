@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import Sequence
+from typing import Sequence, Union
 
 import openai
 import dotenv
@@ -66,7 +66,7 @@ class AI:
 
 class ArgsNamespace:
     def __new__(cls,
-                source: Sequence[str] | str | None = None,
+                source: Union[Sequence, str, None] = None,
                 interactive_mode: bool = False) -> argparse.Namespace:
         """
         Return namespace of arguments.
@@ -192,7 +192,7 @@ class InputListener:
     The class extends the capabilities of the input function.
     The listen method listens for the keys pressed by the user and returns the result.
     """
-    def __init__(self, previous_inputs: list[str] | None = None):
+    def __init__(self, previous_inputs: Union[list, None] = None):
         self._previous_inputs = previous_inputs
         if self._previous_inputs is not None:
             self._previous_inputs.append('')
