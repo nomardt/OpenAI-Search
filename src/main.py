@@ -5,14 +5,16 @@ from argparse import Namespace
 from loguru import logger as log
 
 from logger import configure_logging
-from models import ArgsNamespace, AI
+from models import ArgsNamespace, AI, InputListener
 
 
 def interactive_loop_session(config: Namespace) -> None:
     log.info("Interactive mode enabled.")
+    previous_inputs = []
 
     while True:
-        user_input = input('Enter your prompt:\n> ')
+        user_input = InputListener().listen()
+        previous_inputs.append(previous_inputs)
         log.prompt(user_input)
 
         config = ArgsNamespace(source=user_input, interactive_mode=True)
