@@ -1,4 +1,4 @@
-openai==0.26.1
-python-dotenv==0.21.0
+openai==0.26.5
 loguru==0.6.0
 pynput~=1.7.6
+environs==9.5.0
